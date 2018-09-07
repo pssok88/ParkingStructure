@@ -59,9 +59,17 @@ namespace OOPDemo.ParkingStructure
         public Driver Driver { get; set; }
     }
 
+    public enum ParkingType
+    {
+        General,
+        Valet,
+        FrequentFlyer
+
+    }
     public class ParkingSpot 
     {
-        public int ParkingSpotNumber { get; set; }
+        public ParkingType ParkingType { get; set; }
+        public string ParkingSpotNumber { get; set; }
         public string ParkingStructureLevel { get; set; }
         public double HoursParked { get; set; }
         public DateTime StartTime { get; set; }
@@ -74,13 +82,7 @@ namespace OOPDemo.ParkingStructure
         public string Name { get; set; }
     }
 
-    public enum ParkingType
-    {
-        General,
-        Valet,
-        FrequentFlyer
-
-    }
+  
 
     public class ParkingStructure
     {
@@ -192,6 +194,34 @@ namespace OOPDemo.ParkingStructure
             };
 
             return totalPrice;
+        }
+
+        
+        public double ParkingCost(string parkingSpace, string parkingLevel)
+        {
+            var parkingDetails = ParkingSpots.Find(x => x.ParkingSpotNumber == parkingSpace && x.ParkingStructureLevel == parkingLevel);
+            var minutesParked = (DateTime.Now - parkingDetails.StartTime).TotalMinutes;
+            double totalCost = 0;
+
+            switch (parkingDetails.ParkingType)
+            {
+                case ParkingType.General:
+                    GeneralParking generalParking = new GeneralParking();
+                    totalCost = (minutesParked / 60) * generalParking.ParkingPrice;
+                    break;
+                case ParkingType.Valet:
+                    ValetParking valetParking = new ValetParking();
+                    totalCost = (minutesParked / 60) * valetParking.ParkingPrice;
+                    break;
+                case ParkingType.FrequentFlyer:
+                    FrequentFlyerParking frequentFlyerParking = new FrequentFlyerParking();
+                    totalCost = (minutesParked / 60) * frequentFlyerParking.ParkingPrice;
+                    break;
+                default:
+                    throw new Exception("Time error");
+            }
+
+            return totalCost;
         }
 
 

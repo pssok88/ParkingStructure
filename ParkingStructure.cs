@@ -30,12 +30,18 @@ namespace OOPDemo.ParkingStructure
     //    //var parkingSpotInfo = {}
     //    return parkingSpot;
     //}
-//    use composition
-//      public class ParkingLevel
-//    {
-//        list<ParkingSpot> ParkingSpots { gets; set; }
-//    }
+    //    use composition
+    //      public class ParkingLevel
+    //    {
+    //        list<ParkingSpot> ParkingSpots { gets; set; }
+    //    }
 
+
+    public class Driver
+    {
+        public string LicensePlate { get; set; }
+        public string Name { get; set; }
+    }
 
     public class GeneralParking
     {
@@ -66,9 +72,10 @@ namespace OOPDemo.ParkingStructure
         FrequentFlyer
 
     }
+
     public class ParkingSpot 
     {
-        public ParkingType ParkingType { get; set; }
+        public ParkingType GetParkingType { get; set; } 
         public string ParkingSpotNumber { get; set; }
         public string ParkingStructureLevel { get; set; }
         public double HoursParked { get; set; }
@@ -76,15 +83,7 @@ namespace OOPDemo.ParkingStructure
         public bool Available { get; set; }
     }
 
-    public class Driver 
-    {
-        public string LicensePlate { get; set; }
-        public string Name { get; set; }
-    }
-
-  
-
-    public class ParkingStructure
+    public class ParkingStructure1
     {
         //constructors
         public List<ParkingLevell> parkingLevells { get; set; }
@@ -98,6 +97,7 @@ namespace OOPDemo.ParkingStructure
         public List<Driver> ValetParkingSpotOwners { get; set; }
         public List<Driver> FrequentFlyerParkingSpotOwners { get; set; }
         public List<ParkingSpot> ParkingSpots { get; set; }
+        public List<ParkingLevell> ParkingLevells { get; set; }
 
         public DateTime AddCar(ParkingType parkingType, Driver driver, ParkingSpot parkingSpot)
         {
@@ -120,6 +120,7 @@ namespace OOPDemo.ParkingStructure
 
             ParkingSpot parking = new ParkingSpot
             {
+                GetParkingType = parkingSpot.GetParkingType,
                 ParkingSpotNumber = parkingSpot.ParkingSpotNumber,
                 ParkingStructureLevel = parkingSpot.ParkingStructureLevel,
                 HoursParked = parkingSpot.HoursParked,
@@ -127,17 +128,24 @@ namespace OOPDemo.ParkingStructure
                 Available = false
             };
 
-            ParkingSpots.Add(parking);
+
+            List<ParkingSpot> parkingSpots = new List<ParkingSpot>();
+
+
+           parkingSpots.Add(parking);
 
             switch (parkingType)
             {
                 case ParkingType.General:
+                    List<Driver> GeneralParkingSpotOwners = new List<Driver>();
                     GeneralParkingSpotOwners.Add(driverInfo);
                     break;
                 case ParkingType.Valet:
+                    List<Driver> ValetParkingSpotOwners = new List<Driver>();
                     ValetParkingSpotOwners.Add(driverInfo);
                     break;
                 case ParkingType.FrequentFlyer:
+                    List<Driver> FrequentFlyerParkingSpotOwners = new List<Driver>();
                     FrequentFlyerParkingSpotOwners.Add(driverInfo);
                     break;
                 default:
@@ -146,7 +154,7 @@ namespace OOPDemo.ParkingStructure
 
             //store data somewhere
 
-            return parking.StartTime; //returning ticket with start time
+            return DateTime.Now; //returning ticket with start time
         }
 
         public void RemoveCar(ParkingType parkingType, Driver parking, ParkingSpot parkingSpot)
@@ -203,7 +211,7 @@ namespace OOPDemo.ParkingStructure
             var minutesParked = (DateTime.Now - parkingDetails.StartTime).TotalMinutes;
             double totalCost = 0;
 
-            switch (parkingDetails.ParkingType)
+            switch (parkingDetails.GetParkingType)
             {
                 case ParkingType.General:
                     GeneralParking generalParking = new GeneralParking();

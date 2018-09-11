@@ -6,37 +6,6 @@ using System.Threading.Tasks;
 
 namespace OOPDemo.ParkingStructure
 {
-    //public class Location
-    //{
-    //    public int Level { get; set; }
-    //    public int ParkingSpaceNumber { get; set; }
-
-    //}
-
-    //public double GeneralParkingPrice { get; set; }
-    //public double ValetPrice { get; set; }
-    //public bool Available { get; set; }
-    //public string LicensePlate { get; set; }
-    //public double HoursParked { get; set; }
-    //public Location ParkedLocation { get; set; }
-
-    //public Location AddCar(string LicensePlate, Location location)
-    //{
-    //    Location parkingSpot = new Location
-    //    {
-    //        Level = location.Level,
-    //        ParkingSpaceNumber = location.ParkingSpaceNumber
-    //    };
-    //    //var parkingSpotInfo = {}
-    //    return parkingSpot;
-    //}
-    //    use composition
-    //      public class ParkingLevel
-    //    {
-    //        list<ParkingSpot> ParkingSpots { gets; set; }
-    //    }
-
-
     public class Driver
     {
         public string LicensePlate { get; set; }
@@ -99,18 +68,12 @@ namespace OOPDemo.ParkingStructure
         public List<ParkingSpot> ParkingSpots { get; set; }
         public List<ParkingLevell> ParkingLevells { get; set; }
 
-        public DateTime AddCar(ParkingType parkingType, Driver driver, ParkingSpot parkingSpot)
+        public List<ParkingSpot> AddCar(ParkingType parkingType, Driver driver, ParkingSpot parkingSpot)
         {
-            //Driver parkingSpot = new Driver
-            //{
-            //    ParkingSpaceNumber = parking.ParkingSpaceNumber,
-            //    LicensePlate = parking.LicensePlate,
-            //    StartTime = DateTime.Now,
-            //    Available = false,
-            //    ParkingStructureLevel = parking.ParkingStructureLevel,
-            //    Name = parking.Name
-            //    //ParkingSpot.ParkingType = parking.Type
-            //};
+            List<Driver> GeneralParkingSpotOwners = new List<Driver>();
+            List<Driver> ValetParkingSpotOwners = new List<Driver>();
+            List<Driver> FrequentFlyerParkingSpotOwners = new List<Driver>();
+            List<ParkingSpot> parkingSpots = new List<ParkingSpot>();
 
             Driver driverInfo = new Driver
             {
@@ -128,24 +91,18 @@ namespace OOPDemo.ParkingStructure
                 Available = false
             };
 
-
-            List<ParkingSpot> parkingSpots = new List<ParkingSpot>();
-
-
-           parkingSpots.Add(parking);
+            parkingSpots.Add(parking);
+              
 
             switch (parkingType)
             {
                 case ParkingType.General:
-                    List<Driver> GeneralParkingSpotOwners = new List<Driver>();
                     GeneralParkingSpotOwners.Add(driverInfo);
                     break;
                 case ParkingType.Valet:
-                    List<Driver> ValetParkingSpotOwners = new List<Driver>();
                     ValetParkingSpotOwners.Add(driverInfo);
                     break;
                 case ParkingType.FrequentFlyer:
-                    List<Driver> FrequentFlyerParkingSpotOwners = new List<Driver>();
                     FrequentFlyerParkingSpotOwners.Add(driverInfo);
                     break;
                 default:
@@ -153,8 +110,13 @@ namespace OOPDemo.ParkingStructure
             }
 
             //store data somewhere
-
-            return DateTime.Now; //returning ticket with start time
+            //var parkingList = new List<ParkingSpot>();
+            //foreach (ParkingSpot p in parkingSpots)
+            //{
+            //     var eachElement = p;
+            //    parkingList.Add(eachElement);
+            //}
+            return parkingSpots; //returning ticket with start time
         }
 
         public void RemoveCar(ParkingType parkingType, Driver parking, ParkingSpot parkingSpot)
@@ -181,20 +143,20 @@ namespace OOPDemo.ParkingStructure
 
         public double ParkingCost(ParkingType parkingType, ParkingSpot parkingSpot)
         {
+            GeneralParking generalParking = new GeneralParking();
+            ValetParking valetParking = new ValetParking();
+            FrequentFlyerParking frequentFlyerParking = new FrequentFlyerParking();
             var minutesParked = (DateTime.Now - parkingSpot.StartTime).Minutes;
             double totalPrice = 0;
             switch (parkingType)
             {
                 case ParkingType.General:
-                    GeneralParking generalParking = new GeneralParking();
                     totalPrice = (minutesParked/60) * generalParking.ParkingPrice; 
                     break;
                 case ParkingType.Valet:
-                    ValetParking valetParking = new ValetParking();
                     totalPrice = (minutesParked/60) * valetParking.ParkingPrice;
                     break;
                 case ParkingType.FrequentFlyer:
-                    FrequentFlyerParking frequentFlyerParking = new FrequentFlyerParking();
                     totalPrice = (minutesParked / 60) * frequentFlyerParking.ParkingPrice;
                     break;
                 default:
@@ -207,6 +169,9 @@ namespace OOPDemo.ParkingStructure
         
         public double ParkingCost(string parkingSpace, string parkingLevel)
         {
+            GeneralParking generalParking = new GeneralParking();
+            ValetParking valetParking = new ValetParking();
+            FrequentFlyerParking frequentFlyerParking = new FrequentFlyerParking();
             var parkingDetails = ParkingSpots.Find(x => x.ParkingSpotNumber == parkingSpace && x.ParkingStructureLevel == parkingLevel);
             var minutesParked = (DateTime.Now - parkingDetails.StartTime).TotalMinutes;
             double totalCost = 0;
@@ -214,15 +179,12 @@ namespace OOPDemo.ParkingStructure
             switch (parkingDetails.GetParkingType)
             {
                 case ParkingType.General:
-                    GeneralParking generalParking = new GeneralParking();
                     totalCost = (minutesParked / 60) * generalParking.ParkingPrice;
                     break;
                 case ParkingType.Valet:
-                    ValetParking valetParking = new ValetParking();
                     totalCost = (minutesParked / 60) * valetParking.ParkingPrice;
                     break;
                 case ParkingType.FrequentFlyer:
-                    FrequentFlyerParking frequentFlyerParking = new FrequentFlyerParking();
                     totalCost = (minutesParked / 60) * frequentFlyerParking.ParkingPrice;
                     break;
                 default:

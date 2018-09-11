@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -93,18 +93,18 @@ namespace OOPDemo.ParkingStructure
             GeneralParking generalParking = new GeneralParking();
             ValetParking valetParking = new ValetParking();
             FrequentFlyerParking frequentFlyerParking = new FrequentFlyerParking();
-            var minutesParked = (DateTime.Now - parkingSpot.StartTime).Minutes;
+            var hoursParked = ((DateTime.Now - parkingSpot.StartTime).Minutes)/60;
             double totalPrice = 0;
             switch (parkingType)
             {
                 case ParkingType.General:
-                    totalPrice = (minutesParked / 60) * generalParking.ParkingPrice;
+                    totalPrice = (hoursParked) * generalParking.ParkingPrice;
                     break;
                 case ParkingType.Valet:
-                    totalPrice = (minutesParked / 60) * valetParking.ParkingPrice;
+                    totalPrice = (hoursParked) * valetParking.ParkingPrice;
                     break;
                 case ParkingType.FrequentFlyer:
-                    totalPrice = (minutesParked / 60) * frequentFlyerParking.ParkingPrice;
+                    totalPrice = (hoursParked) * frequentFlyerParking.ParkingPrice;
                     break;
                 default:
                     throw new Exception("Time error");

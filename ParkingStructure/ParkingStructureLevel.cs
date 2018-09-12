@@ -6,21 +6,24 @@ using System.Threading.Tasks;
 
 namespace OOPDemo.ParkingStructure
 {
-    public class ParkingLevell
+    public class ParkingLevel
     {
         public string ParkingStructureLevel { get; set; }
         public List<Driver> GeneralParkingSpotOwners { get; set; }
         public List<Driver> ValetParkingSpotOwners { get; set; }
         public List<Driver> FrequentFlyerParkingSpotOwners { get; set; }
         public List<ParkingSpot> ParkingSpots { get; set; }
-        public List<ParkingLevell> ParkingLevells { get; set; }
+        public List<ParkingLevel> ParkingLevels { get; set; }
+        public Guid Id { get; set; }
+        List<Driver> GPSpotOwners = new List<Driver>();
+        List<Driver> VPSpotOwners = new List<Driver>();
+        List<Driver> FFSpotOwners = new List<Driver>();
 
-        public List<ParkingSpot> AddCar(ParkingType parkingType, Driver driver, ParkingSpot parkingSpot)
+        public ParkingSpot AddCar(ParkingType parkingType, Driver driver, ParkingSpot parkingSpot)
+        //public List<ParkingSpot> AddCar(ParkingType parkingType, Driver driver, ParkingSpot parkingSpot)
         {
-            List<Driver> GeneralParkingSpotOwners = new List<Driver>();
-            List<Driver> ValetParkingSpotOwners = new List<Driver>();
-            List<Driver> FrequentFlyerParkingSpotOwners = new List<Driver>();
             List<ParkingSpot> parkingSpots = new List<ParkingSpot>();
+            //var Id = Guid.NewGuid;
 
             Driver driverInfo = new Driver
             {
@@ -30,12 +33,13 @@ namespace OOPDemo.ParkingStructure
 
             ParkingSpot parking = new ParkingSpot
             {
+                Id = Guid.NewGuid(),
                 GetParkingType = parkingSpot.GetParkingType,
                 ParkingSpotNumber = parkingSpot.ParkingSpotNumber,
                 ParkingStructureLevel = parkingSpot.ParkingStructureLevel,
                 HoursParked = parkingSpot.HoursParked,
                 StartTime = DateTime.Now,
-                Available = false
+                Unavailable = true
             };
 
             parkingSpots.Add(parking);
@@ -44,13 +48,13 @@ namespace OOPDemo.ParkingStructure
             switch (parkingType)
             {
                 case ParkingType.General:
-                    GeneralParkingSpotOwners.Add(driverInfo);
+                    GPSpotOwners.Add(driverInfo);
                     break;
                 case ParkingType.Valet:
-                    ValetParkingSpotOwners.Add(driverInfo);
+                    VPSpotOwners.Add(driverInfo);
                     break;
                 case ParkingType.FrequentFlyer:
-                    FrequentFlyerParkingSpotOwners.Add(driverInfo);
+                    FFSpotOwners.Add(driverInfo);
                     break;
                 default:
                     throw new Exception("incorrect parking spot type");
@@ -63,15 +67,15 @@ namespace OOPDemo.ParkingStructure
             //     var eachElement = p;
             //    parkingList.Add(eachElement);
             //}
-            return parkingSpots; //returning ticket with start time
+            return parking; //returning ticket with start time
         }
+
 
         public void RemoveCar(ParkingType parkingType, Driver parking, ParkingSpot parkingSpot)
         {
             switch (parkingType)
             {
                 case ParkingType.General:
-                    // GeneralParkingSpotOwners.Find(x => x.LicensePlate == parking.LicensePlate);
                     GeneralParkingSpotOwners.Remove(parking);
                     break;
                 case ParkingType.Valet:
